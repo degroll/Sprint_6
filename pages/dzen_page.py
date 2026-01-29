@@ -1,6 +1,5 @@
 import allure
 
-from selenium.webdriver.support import expected_conditions
 from .base_page import BasePage
 from locators.locators import DzenPageLocator
 from data import URL
@@ -15,12 +14,8 @@ class DzenPage(BasePage):
         super().__init__(driver, self.expected_url)
 
     @allure.step("Ожидаем перенаправление и получаем url")
-    def wait_for_redirect_complete(self):
-        try:
-            self.wait.until(expected_conditions.url_to_be(self.expected_url))
-            return True
-        except:
-            self.wait.until(expected_conditions.url_contains("dzen.ru"))
+    def redirect_complete_and_url(self):
+        self.wait_for_redirect_complete()
         return self.get_current_url()
     
 

@@ -1,13 +1,12 @@
 import allure
 
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support import expected_conditions
 from locators.locators import BasePageLocators, OrderPageFirstLocators, OrderPageSecondLocators, ConfirmMadalWindowLocator, CompletedMadalWindowLocator
-from .base_page import BasePage
+from .main_page import MainPage
 
 from data import URL
 
-class OrderPage(BasePage):
+class OrderPage(MainPage):
     scooter_logo = BasePageLocators.SCOOTER_LOGO
     url = URL[0]
     name_field = OrderPageFirstLocators.NAME_FIELD
@@ -38,21 +37,21 @@ class OrderPage(BasePage):
 
     @allure.step("Заполняем данные в элемент")
     def send_keys(self, element, data):
-        return self.driver.find_element(*element).send_keys(data)
+        return self.find_element(element).send_keys(data)
     
     @allure.step("Нажимаем на логотип <<Самокат>>")
     def click_scooter_logo(self):
-        self.wait.until(expected_conditions.visibility_of_element_located(self.phone_number_field))
+        self.wait_for_visibility_element(self.phone_number_field)
         self.click_element(self.scooter_logo)
     
     @allure.step("Нажимаем на dropdown и выбираем нужный элемент")
     def select_from_dropdown(self, element, text):
-        self.wait.until(expected_conditions.element_to_be_clickable(element))
-        current_element = self.driver.find_element(*element)
+        self.wait_for_clicable_element(element)
+        current_element = self.find_element(element)
         current_element.location_once_scrolled_into_view
         actions = ActionChains(self.driver)
         actions.move_to_element(current_element).click().perform()
-        current_text = self.driver.find_element(*text)
+        current_text = self.find_element(text)
         current_text.location_once_scrolled_into_view
         actions = ActionChains(self.driver)
         actions.move_to_element(current_text).click().perform()

@@ -1,7 +1,6 @@
 import allure
 import pytest
 
-from pages.base_page import BasePage
 from pages.order_page import OrderPage
 from data import DATA_ORDER_FIRST, DATA_ORDER_SECOND, EXPECTED_TEXT
 
@@ -12,11 +11,10 @@ class TestOrderPage:
     @allure.description("Используются первые данные")
     @pytest.mark.parametrize('number', [0, 1])
     def test_order_buttons_first_data(self, number, driver):
-        base_page = BasePage(driver)
-        base_page.open()
-        base_page.wait_for_load_title()
-        base_page.click_order_button(number)
         order_page = OrderPage(driver)
+        order_page.open()
+        order_page.wait_for_load_title()
+        order_page.click_order_button(number)
         name = DATA_ORDER_FIRST["name"][0]
         surname = DATA_ORDER_FIRST["surname"][0]
         address = DATA_ORDER_FIRST["address"][0]
@@ -36,11 +34,10 @@ class TestOrderPage:
     @allure.description("Используются вторые данные")
     @pytest.mark.parametrize('number', [0, 1])
     def test_order_buttons_second_data(self, number, driver):
-        base_page = BasePage(driver)
-        base_page.open()
-        base_page.wait_for_load_title()
-        base_page.click_order_button(number)
         order_page = OrderPage(driver)
+        order_page.open()
+        order_page.wait_for_load_title()
+        order_page.click_order_button(number)
         name = DATA_ORDER_FIRST["name"][1]
         surname = DATA_ORDER_FIRST["surname"][1]
         address = DATA_ORDER_FIRST["address"][1]

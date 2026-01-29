@@ -1,7 +1,9 @@
 import pytest
 
 from selenium import webdriver
-from data import URL
+from pages.main_page import MainPage
+from pages.dzen_page import DzenPage
+
 
 @pytest.fixture
 def driver():
@@ -13,12 +15,10 @@ def driver():
 
 @pytest.fixture
 def main_page(driver):
-    from pages.main_page import MainPage
     page = MainPage(driver)
     page.open()
     return page
 
 @pytest.fixture
 def dzen_page(driver):
-    from pages.dzen_page import DzenPage
     return DzenPage(driver)

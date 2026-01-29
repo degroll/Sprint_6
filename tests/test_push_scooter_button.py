@@ -1,7 +1,7 @@
 import allure
 
-from pages.base_page import BasePage
 from pages.order_page import OrderPage
+from pages.main_page import MainPage
 from data import URL
 
 
@@ -9,13 +9,14 @@ class TestPushScooterButton:
 
     @allure.title("Проверка перехода на главную страницу")
     def test_push_scooter(self, driver):
-        base_page = BasePage(driver)
-        base_page.open()
-        base_page.wait_for_load_title()
-        base_page.click_order_button(0)
+        main_page = MainPage(driver)
+        main_page.open()
+        main_page.wait_for_load_title()
+        main_page = MainPage(driver)
+        main_page.click_order_button(0)
         order_page = OrderPage(driver)
         order_page.click_scooter_logo()
-        url = base_page.get_current_url()
+        url = main_page.get_current_url()
         expected_url = URL[0] + "/"
         assert url == expected_url
     

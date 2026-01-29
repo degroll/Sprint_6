@@ -5,36 +5,13 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from locators.locators import BasePageLocators
 from data import URL
-import time
+
+
 
 class BasePage:
-    questions = {
-        0: BasePageLocators.FIRST_QUESTION,
-        1: BasePageLocators.SECOND_QUESTION,
-        2: BasePageLocators.THIRD_QUESTION,
-        3: BasePageLocators.FOURTH_QUESTION,
-        4: BasePageLocators.FIFTH_QUESTION,
-        5: BasePageLocators.SIXTH_QUESTION,
-        6: BasePageLocators.SEVENTH_QUESTION,
-        7: BasePageLocators.EIGHTH_QUESTION
-    }
-    answers = {
-        0: BasePageLocators.FIRST_ANSWER,
-        1: BasePageLocators.SECOND_ANSWER,
-        2: BasePageLocators.THIRD_ANSWER,
-        3: BasePageLocators.FOURTH_ANSWER,
-        4: BasePageLocators.FIFTH_ANSWER,
-        5: BasePageLocators.SIXTH_ANSWER,
-        6: BasePageLocators.SEVENTH_ANSWER,
-        7: BasePageLocators.EIGHTH_ANSWER
-    }
-    order_buttons = {
-        0: BasePageLocators.FIRST_ORDER_BUTTON,
-        1: BasePageLocators.SECOND_ORDER_BUTTON
-    }
-    
+
+    expected_url = URL[3]
     TITLE_OF_PAGE = BasePageLocators.TITLE_OF_PAGE
-    COOKIE_BUTTON = BasePageLocators.COOKIE_BUTTON
 
     @allure.step("Инициализируем драйвер")
     def __init__(self, driver, url=None):
@@ -49,17 +26,7 @@ class BasePage:
     
     @allure.step("Ищем элемент")
     def find_element(self, locator):
-        return self.wait.until(expected_conditions.presence_of_element_located(locator))
-
-    
-    @allure.step("Переключаемся на новое окно")
-    def switch_to_new_window(self, main_window):
-        self.wait.until(lambda d: len(d.window_handles) > len([main_window]))
-        for window_handle in self.driver.window_handles:
-            if window_handle != main_window:
-                self.driver.switch_to.window(window_handle)
-                return window_handle
-        raise Exception("Новое окно не найдено")
+        return self.wait.until(expected_conditions.presence_of_element_located(locator)) 
     
     @allure.step("Ожидаем загрузку названия страницы")
     def wait_for_load_title(self):
@@ -83,11 +50,6 @@ class BasePage:
         current_element.location_once_scrolled_into_view
         action = ActionChains(self.driver)
         action.move_to_element(current_element).click().perform()
-
-    @allure.step("Нажимаем на кнопку заказа")
-    def click_order_button(self, num):
-        self.wait_for_clicable_element(self.order_buttons[num])
-        self.click_element(self.order_buttons[num])
     
     @allure.step("Получаем текст элемента")
     def get_text_element(self, element):
@@ -105,6 +67,26 @@ class BasePage:
         self.click_element(self.questions[number])
         self.wait_for_visibility_element(self.answers[number])
         return self.get_text_element(self.answers[number])
+    
+    @allure.step("Ожидаем перенаправление")
+    def wait_for_redirect_complete(self):
+        try:
+            self.wait.until(expected_conditions.url_to_be(self.expected_url))
+            return True
+        except:
+            self.wait.until(expected_conditions.url_contains("dzen.ru"))
+
+    @allure.step("Получаем текущий дескриптор окна")
+    def get_current_window_handle(self):
+        return self.driver.current_window_handle
+    
+    @allure.step("Получаем дескриптор окна")
+    def get_window_handles(self):
+        return self.driver.window_handles
+    
+    @allure.step("Переключаемся на другое окно")
+    def switch_to_window(self, window):
+        return self.driver.switch_to.window(window)
 
 
 
