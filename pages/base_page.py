@@ -58,15 +58,6 @@ class BasePage:
     @allure.step("Получаем url страницы")
     def get_current_url(self):
         return self.driver.current_url
-
-    @allure.step("Получаем текст ответа")
-    def get_answer(self, number):
-        cookie_button = self.driver.find_element(*self.COOKIE_BUTTON)
-        cookie_button.click()
-        self.wait_for_clicable_element(self.questions[number])
-        self.click_element(self.questions[number])
-        self.wait_for_visibility_element(self.answers[number])
-        return self.get_text_element(self.answers[number])
     
     @allure.step("Ожидаем перенаправление")
     def wait_for_redirect_complete(self):
